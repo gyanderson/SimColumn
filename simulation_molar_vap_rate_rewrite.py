@@ -1,5 +1,5 @@
 #!/usr/bin/python -tt
-""" Simulate a distillation  or else"""
+""" Simulate a distillation"""
 import sys
 from scipy.integrate import odeint
 from scipy.integrate import ode
