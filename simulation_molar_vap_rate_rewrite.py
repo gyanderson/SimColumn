@@ -229,7 +229,7 @@ def col(t,y,plates,congener_identity,reflux_knob,power):
     """
     Col is a vector of the form [e1, h1, c1, e2, h2, c2...en, hn, cn] where e and h are mL, and cn is molarity of a congener (takes up 0 volume)
     """
-    speed_limit = 1.0
+    speed_limit = 0.5
     #ethanol_tot =
     #water_tot =
     #congener_tot =
@@ -274,10 +274,18 @@ def col(t,y,plates,congener_identity,reflux_knob,power):
         vapor_abv = emperical_vapor_composition(abv)
         T = temp(abv) # K
         #vapor_abv = calculated_vapor_composition(abv)
+        """
+        Could effective plate_hole_radius decrease once the column is on?
+        Perhaps the rising vapors slow down the descending liquid.
+        In this case, tuning plate_hole_radius based on how fast the column
+        empties when power is turned off is not correct.
+        """
         if reflux_knob < eps:
             plate_hole_radius = 0.0
-        else:
+        elif power < 10:
             plate_hole_radius = 0.005
+        else:
+            plate_hole_radius = 0.0009
         reflux_rate = reflux(ethanol,water,plate_hole_radius) # mL/s
         vap_rate = binary_vaporization_rate(ethanol,water,power,T) # mL of liquid / s
         molar_vap_rate = vap_rate*(abv*ethanol_density/ethanol_MW + (1-abv)*water_density/water_MW)*1000000 # umol/s
